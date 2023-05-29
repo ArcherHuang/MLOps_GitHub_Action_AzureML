@@ -1,0 +1,111 @@
+name: Create-AzureML-Pipeline-Jobs-Using-AZ-Cli
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+env:
+  RESOURCE_GROUP: iris-rg
+  WORKSPACE_NAME: iris-ws
+  REGION: japaneast
+  COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+  COMMIT_TIMESTAMP: ${{ github.event.head_commit.timestamp }}
+  COMMIT_URL: ${{ github.event.head_commit.url }}
+  COMMITTER: ${{ github.event.head_commit.committer.username }}
+  GITHUB_ACTION_RUN_ID: ${{ github.run_id }}
+  GITHUB_ACTION_RUN_NUMBER: ${{ github.run_number }}
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+    # - uses: actions/setup-node@v3
+    #   with:
+    #     node-version: '16'
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: |
+        echo "$GITHUB_CONTEXT"
+    - name: print default environment variables
+      run: |
+        echo "HOME: ${HOME}"
+        echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
+        echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
+        echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
+        echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
+        echo "GITHUB_SHA: ${GITHUB_SHA}"
+        echo "GITHUB_REF: ${GITHUB_REF}"
+        echo "GITHUB_ACTION: ${GITHUB_ACTION}"
+        echo "GITHUB_ACTIONS: ${GITHUB_ACTIONS}"
+        echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
+    - name: Display GitHub Repository
+      run: echo $GITHUB_REPOSITORY
+    - name: Display GitHub SHA
+      run: echo $GITHUB_SHA
+    - name: Display commit url
+      run: echo $COMMIT_URL
+    - name: Display committer
+      run: echo $COMMITTER
+    - name: Display commit timestamp
+      run: echo $COMMIT_TIMESTAMP
+    - name: Display commit message
+      run: echo $COMMIT_MESSAGE
+    - name: Display GitHub Workflow name
+      run: echo $GITHUB_WORKFLOW
+    - name: Display GitHub Workflow Run ID
+      run: echo $GITHUB_ACTION_RUN_ID
+    - name: Display GitHub Workflow Run Number
+      run: echo $GITHUB_ACTION_RUN_NUMBER
+    - name: Log into Azure using github secret AZURE_CREDENTIALS
+      uses: Azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        enable-AzPSSession: true
+    - name: 'Run az commands'
+      run: |
+        az account show
+        az group list
+    - name: Setup
+      run: bash setup.sh $RESOURCE_GROUP $REGION $WORKSPACE_NAME
+      working-directory: scripts
+      continue-on-error: true
+    - name: Create Cluster
+      run: bash -x create-cluster.sh ../run_configs/cluster/create_cluster.yml $RESOURCE_GROUP $WORKSPACE_NAME
+      working-directory: scripts
+    - name: Install Python Packages
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+      working-directory: secret
+    - name: Set Blob Secret
+      env:
+        BLOB_SECRET: ${{ secrets.BLOB_SECRET }}
+        SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+      run: python set_secret.py $BLOB_SECRET $SUBSCRIPTION_ID $RESOURCE_GROUP $WORKSPACE_NAME
+      working-directory: secret
+    - name: Save Commit Info
+      env:
+        SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+        IOT_HUB_CONNECTION_STRING: ${{ secrets.IOT_HUB_CONNECTION_STRING }}
+        TEAMS_WEBHOOK: ${{ secrets.TEAMS_WEBHOOK }}
+      run: python save_info.py "$GITHUB_SHA" "$SUBSCRIPTION_ID" "$RESOURCE_GROUP" "$WORKSPACE_NAME" "$IOT_HUB_CONNECTION_STRING" "$GITHUB_REPOSITORY" "$COMMIT_URL" "$COMMITTER" "$COMMIT_TIMESTAMP" "$COMMIT_MESSAGE" "$GITHUB_WORKFLOW" "$GITHUB_ACTION_RUN_ID" "$GITHUB_ACTION_RUN_NUMBER" "$TEAMS_WEBHOOK"
+      working-directory: pipeline-info
+    - name: Set Datasets
+      env:
+        BLOB_SECRET: ${{ secrets.BLOB_SECRET }}
+        SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+      run: python datasets.py $BLOB_SECRET $SUBSCRIPTION_ID $RESOURCE_GROUP $WORKSPACE_NAME
+      working-directory: pipeline-python
+    - name: Create Train Component
+      run: bash -x create-component.sh ../run_configs/component/component_train.yml $RESOURCE_GROUP $WORKSPACE_NAME
+      working-directory: scripts
+    - name: Create Evaluate Component
+      run: bash -x create-component.sh ../run_configs/component/component_evaluate.yml $RESOURCE_GROUP $WORKSPACE_NAME
+      working-directory: scripts
+    - name: Create Pipeline Job
+      run: bash -x run-job.sh ../run_configs/jobs/pipeline.yml $RESOURCE_GROUP $WORKSPACE_NAME
+      working-directory: scripts

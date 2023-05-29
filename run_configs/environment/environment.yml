@@ -1,0 +1,15 @@
+name: iris_pipeline
+dependencies:
+- python=3.8
+- pip:
+  - azureml-sdk[automl]
+  - opencv-python-headless
+  - tensorflow
+  - azure-iot-device
+  - azure-iot-hub
+  - wget
+  - matplotlib
+  - requests
+channels:
+  - anaconda
+  - conda-forge
