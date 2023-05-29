@@ -185,7 +185,7 @@ run.register_model(
 print(f"Model Latest Version: {Model.list(ws)[0].version}")
 
 # 存放 Workflow 相關資訊
-workfow_info = {
+workflow_info = {
   "date_time": commit_timestamp_replace,
   "data_assets_version": {
     "fileIrisTrainData": fileIrisTrainData.version,
@@ -216,9 +216,9 @@ workfow_info = {
 # Pipeline 間訊息交換
 parameter_json = {
   "model_name": model_name,
-  "file_url": f"https://irissamples.blob.core.windows.net/models/{commit_timestamp_replace}/{commit_sha}.zip",
-  "json_url": f"https://irissamples.blob.core.windows.net/models/{commit_timestamp_replace}/{commit_sha}.json",
-  "workfow_info": workfow_info
+  "file_url": f"https://{args.blob_account_name}.blob.core.windows.net/models/{commit_timestamp_replace}/{commit_sha}.zip",
+  "json_url": f"https://{args.blob_account_name}.blob.core.windows.net/models/{commit_timestamp_replace}/{commit_sha}.json",
+  "workflow_info": workflow_info
 }
 
 with open(os.path.join(args.output_folder, "OutputFileDatasetConfig-Parameter.json"), "w") as outfile:
