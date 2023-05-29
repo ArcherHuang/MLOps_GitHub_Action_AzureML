@@ -16,14 +16,12 @@ from azure.iot.hub import IoTHubRegistryManager
 import teams_notify
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--blob_datastore_name", type=str, help="output path")
 parser.add_argument("--blob_container_name", type=str, help="output path")
 parser.add_argument("--blob_account_name", type=str, help="output path")
 parser.add_argument("--train_input", dest="train_input", required=True)
 parser.add_argument("--test_datasets", type=str, help="output path")
 
 args = parser.parse_args()
-print(f"Argument blob_datastore_name: {args.blob_datastore_name}")
 print(f"Argument blob_container_name: {args.blob_container_name}")
 print(f"Argument blob_account_name: {args.blob_account_name}")
 print(f"Argument train_input: {args.train_input}")

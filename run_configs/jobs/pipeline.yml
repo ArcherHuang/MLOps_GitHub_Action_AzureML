@@ -6,7 +6,6 @@ experiment_name: training-pipeline
 description: Pipeline to build an MLFlow model to determine the likelihood of IRIS.
 
 inputs:
-  blob_datastore_name: 'irissamples'
   blob_account_name: 'irisblobs'
   blob_container_name: 'models'
   datasets_container_name: 'datasets'
@@ -20,7 +19,6 @@ jobs:
     type: command
     component: azureml:component_pipeline_cli_train@latest
     inputs:
-      blob_datastore_name: ${{parent.inputs.blob_datastore_name}}
       blob_account_name: ${{parent.inputs.blob_account_name}}
       blob_container_name: ${{parent.inputs.blob_container_name}}
       training_datasets:
@@ -36,7 +34,6 @@ jobs:
     type: command
     component: azureml:component_pipeline_cli_evaluate@latest
     inputs:
-      blob_datastore_name: ${{parent.inputs.blob_datastore_name}}
       blob_account_name: ${{parent.inputs.blob_account_name}}
       blob_container_name: ${{parent.inputs.blob_container_name}}
       test_datasets:

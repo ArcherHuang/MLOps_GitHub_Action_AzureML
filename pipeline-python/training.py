@@ -20,7 +20,6 @@ import matplotlib.pyplot as plt
 model_name="tf-iris-decision-tree"
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--blob_datastore_name", type=str, help="output path")
 parser.add_argument("--blob_container_name", type=str, help="output path")
 parser.add_argument("--blob_account_name", type=str, help="output path")
 parser.add_argument("--training_datasets", type=str, help="output path")
@@ -28,7 +27,6 @@ parser.add_argument("--test_datasets", type=str, help="output path")
 parser.add_argument("--output_folder", type=str, required=True)
 
 args = parser.parse_args()
-print(f"Argument blob_datastore_name: {args.blob_datastore_name}")
 print(f"Argument blob_container_name: {args.blob_container_name}")
 print(f"Argument blob_account_name: {args.blob_account_name}")
 print(f"Argument training_datasets: {args.training_datasets}")

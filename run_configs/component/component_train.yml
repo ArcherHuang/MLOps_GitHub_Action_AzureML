@@ -8,9 +8,6 @@ display_name: component_pipeline_cli_train
 is_deterministic: false # allow_reuse: False
 
 inputs:
-  blob_datastore_name: 
-    type: string
-    default: ""
   blob_account_name: 
     type: string
     default: ""
@@ -32,7 +29,6 @@ environment:
 code: ../../pipeline-python
 command: >-
   python training.py 
-  --blob_datastore_name ${{inputs.blob_datastore_name}}
   --blob_account_name ${{inputs.blob_account_name}}
   --blob_container_name ${{inputs.blob_container_name}}
   --training_datasets ${{inputs.training_datasets}}
