@@ -54,8 +54,8 @@ json_file.close()
 print(f"model_name: {datas['model_name']}")
 print(f"file_url: {datas['file_url']}")
 print(f"json_url: {datas['json_url']}")
-print(f"workfow_info: {datas['workfow_info']}")
-workflow_infos = datas['workfow_info']
+print(f"workflow_info: {datas['workflow_info']}")
+workflow_infos = datas['workflow_info']
 print(f"workflow_infos: {workflow_infos}, type: {type(workflow_infos)}")
 print(f"sha: {workflow_infos['commit_info']['commit_sha']}")
 
