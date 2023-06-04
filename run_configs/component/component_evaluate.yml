@@ -18,10 +18,16 @@ inputs:
     type: uri_folder
   train_input:
     type: uri_folder
+outputs:
+  evaluate_output_folder:
+    type: uri_folder
 
 environment: 
-  conda_file: ../environment/environment.yml
-  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
+  # conda_file: ../environment/environment.yml
+  # image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
+  # image: mcr.microsoft.com/azureml/openmpi4.1.0-cuda11.3-cudnn8-ubuntu20.04
+  # image: mlops168.azurecr.io/azureml/azureml_795fc78b6e72a235cd6eb006fc434a2d
+  image: iriscontainers.azurecr.io/azureml/azureml_795fc78b6e72a235cd6eb006fc434a2d
 
 code: ../../pipeline-python
 command: >-
@@ -30,3 +36,4 @@ command: >-
   --blob_container_name ${{inputs.blob_container_name}}
   --test_datasets ${{inputs.test_datasets}}
   --train_input ${{inputs.train_input}}
+  --evaluate_output_folder ${{outputs.evaluate_output_folder}}

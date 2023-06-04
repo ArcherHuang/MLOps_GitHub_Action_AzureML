@@ -14,7 +14,9 @@ from azureml.core import Dataset
 from azureml.core import Model
 import json 
 import shutil
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
+
+print(f"Tensorflow Version: {tf. __version__}")
 
 # 設定 Model 名稱 
 model_name="tf-iris-decision-tree"
@@ -140,13 +142,13 @@ blob_datastore.upload_files([
 ], target_path=commit_timestamp_replace, overwrite=True)
 
 # Create Loss Chart and Upload
-plt.plot(metrics["loss"][:10])
-plt.xlabel('Epoch')
-plt.ylabel('Training Loss')
-plt.savefig('train_loss.jpg')
-blob_datastore.upload_files([
-  "train_loss.jpg"
-], target_path=commit_timestamp_replace, overwrite=True)
+# plt.plot(metrics["loss"][:10])
+# plt.xlabel('Epoch')
+# plt.ylabel('Training Loss')
+# plt.savefig('train_loss.jpg')
+# blob_datastore.upload_files([
+#   "train_loss.jpg"
+# ], target_path=commit_timestamp_replace, overwrite=True)
 
 # 取得 AzureML Data assets Version
 fileIrisTrainData = Dataset.get_by_name(ws, 'IrisTrainFileData')

@@ -1,7 +1,7 @@
 $schema: https://azuremlschemas.azureedge.net/latest/amlCompute.schema.json 
 name: cpu-cluster-4core
 type: amlcompute
-size: STANDARD_DS3_V2
+size: Standard_NV6
 min_instances: 1
 max_instances: 1
 idle_time_before_scale_down: 120

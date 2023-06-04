@@ -1,0 +1,12 @@
+name: iris_pipeline_2
+dependencies:
+- python=3.8.13
+- pip:
+  - azureml-sdk[automl]
+  - wget
+  - requests
+  - azure-iot-device
+  - azure-iot-hub
+channels:
+  - anaconda
+  - conda-forge

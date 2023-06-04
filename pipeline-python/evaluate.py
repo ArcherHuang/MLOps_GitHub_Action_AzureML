@@ -12,20 +12,22 @@ from datetime import datetime
 from azureml.core import Dataset
 from azureml.core import Model
 import json 
-from azure.iot.hub import IoTHubRegistryManager
-import teams_notify
+# from azure.iot.hub import IoTHubRegistryManager
+# import teams_notify
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--blob_container_name", type=str, help="output path")
 parser.add_argument("--blob_account_name", type=str, help="output path")
 parser.add_argument("--train_input", dest="train_input", required=True)
 parser.add_argument("--test_datasets", type=str, help="output path")
+parser.add_argument("--evaluate_output_folder", type=str, required=True)
 
 args = parser.parse_args()
 print(f"Argument blob_container_name: {args.blob_container_name}")
 print(f"Argument blob_account_name: {args.blob_account_name}")
 print(f"Argument train_input: {args.train_input}")
 print(f"Argument test_datasets: {args.test_datasets}")
+print(f"Argument evaluate_output_folder: {args.evaluate_output_folder}")
 
 print(f"test_datasets: {os.listdir(args.test_datasets)}")
 
@@ -37,8 +39,8 @@ ws = run.experiment.workspace
 keyvault = ws.get_default_keyvault()
 retrieved_secret = keyvault.get_secret(name="blob-account-key")
 
-# 取得 IoT Hub Connection String
-iot_hub_connection_string_secret = keyvault.get_secret(name="iot-hub-connection-string")
+# # 取得 IoT Hub Connection String
+# iot_hub_connection_string_secret = keyvault.get_secret(name="iot-hub-connection-string")
 
 # 設定 Datastore
 blob_datastore = Datastore.register_azure_blob_container(workspace=ws, 
@@ -105,23 +107,8 @@ blob_datastore.upload_files([
   json_file_name
 ], target_path=date_time, overwrite=True)
 
-# 發送 Microsoft Teams 通知
-teams_notify.attachments_content_body(workflow_infos)
-
-# 傳送通知到 Edge
-registry_manager = IoTHubRegistryManager(iot_hub_connection_string_secret)
-
-msg = {
-    "file_url": datas['file_url'],
-    "json_url": datas['json_url']
-}
-
-# 設定 IoT Hub Device ID
-iot_hub_device_id = keyvault.get_secret(name="iot-hub-device-id")
-print(f"iot_hub_device_id: {iot_hub_device_id}")
-
-registry_manager.send_c2d_message(
-    iot_hub_device_id,
-    json.dumps(msg),
-    properties={}
-)
+# 存檔
+datas['workflow_infos'] = workflow_infos
+with open(os.path.join(args.evaluate_output_folder, "workflow_infos.json"), "w") as outfile:
+  json.dump(datas, outfile)
+  

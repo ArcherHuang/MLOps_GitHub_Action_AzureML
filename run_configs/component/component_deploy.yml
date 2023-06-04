@@ -1,0 +1,23 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+type: command
+
+name: component_pipeline_cli_deploy
+display_name: component_pipeline_cli_deploy
+# version: 1
+
+is_deterministic: false # allow_reuse: False
+
+inputs:
+  evaluate_input:
+    type: uri_folder
+
+environment: 
+  # conda_file: ../environment/environment-deploy-model.yml
+  # image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
+  # image: mlops168.azurecr.io/azureml/azureml_f46f1d27237fb4e38201acee64c7a00f
+  image: iriscontainers.azurecr.io/azureml/azureml_f46f1d27237fb4e38201acee64c7a00f
+
+code: ../../pipeline-python
+command: >-
+  python deploy_notify.py 
+  --evaluate_input ${{inputs.evaluate_input}}
