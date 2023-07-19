@@ -55,8 +55,6 @@ print(f"details: {details}")
 
 # 取得 Pipeline Job 所屬的 experiment ID
 experiment_id = run.experiment.id
-
-# 打印实验ID
 print(f"experiment_id: {experiment_id}")
 
 # 取得 Blob Key
