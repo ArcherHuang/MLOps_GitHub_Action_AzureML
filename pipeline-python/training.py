@@ -53,6 +53,12 @@ for key, value in properties.items():
 details = run.get_details()
 print(f"details: {details}")
 
+# 取得 Pipeline Job 所屬的 experiment ID
+experiment_id = run.experiment.id
+
+# 打印实验ID
+print(f"experiment_id: {experiment_id}")
+
 # 取得 Blob Key
 keyvault = ws.get_default_keyvault()
 # print(f"list secret: {keyvault.list_secrets()}")
