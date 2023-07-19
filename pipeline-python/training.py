@@ -42,7 +42,7 @@ ws = run.experiment.workspace
 
 # 取得 Pipeline Job 的屬性
 properties = run.get_properties()
-print(f"azureml.pipeline: {properties.azureml.pipeline}")
+print(f"properties: {properties}")
 
 # 顯示屬性
 for key, value in properties.items():
