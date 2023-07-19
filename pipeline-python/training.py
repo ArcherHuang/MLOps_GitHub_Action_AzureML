@@ -51,7 +51,9 @@ for key, value in properties.items():
 
 # 取得 Pipeline Job 的詳細資訊
 details = run.get_details()
-print(f"details: {details}")
+# 取得原始 JSON
+raw_json = json.dumps(details)
+print(f"details: {raw_json}")
 
 # 取得 Blob Key
 keyvault = ws.get_default_keyvault()
