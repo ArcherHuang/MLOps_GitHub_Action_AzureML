@@ -49,6 +49,10 @@ print(f"azureml.pipeline: {properties['azureml.pipeline']}")
 for key, value in properties.items():
     print(f"{key}: {value}")
 
+# 取得 Pipeline Job 的詳細資訊
+details = run.get_details()
+print(f"details: {details}")
+
 # 取得 Blob Key
 keyvault = ws.get_default_keyvault()
 # print(f"list secret: {keyvault.list_secrets()}")
