@@ -40,6 +40,13 @@ print(f"test_datasets: {os.listdir(args.test_datasets)}")
 run = Run.get_context()
 ws = run.experiment.workspace
 
+# 取得 Pipeline Job 的屬性
+properties = run.get_properties()
+
+# 顯示屬性
+for key, value in properties.items():
+    print(f"{key}: {value}")
+
 # 取得 Blob Key
 keyvault = ws.get_default_keyvault()
 # print(f"list secret: {keyvault.list_secrets()}")
