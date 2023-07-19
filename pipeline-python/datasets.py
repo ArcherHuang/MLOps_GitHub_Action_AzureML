@@ -14,8 +14,8 @@ from azureml.data.datapath import DataPath, DataPathComputeBinding
 
 # 設定 Azure Blob 相關資訊
 blob_datasets = ['train', 'test']
-blob_train_dataset_datetime = "20230530_073041"
-blob_test_dataset_datetime = "20230530_073041"
+blob_train_dataset_datetime = "20230719_131932"
+blob_test_dataset_datetime = "20230719_131932"
 blob_account_name = "irisblobs"
 datasets_container_name = "datasets"
 
